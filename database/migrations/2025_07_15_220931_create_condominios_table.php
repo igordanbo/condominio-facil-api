@@ -15,6 +15,7 @@ class CreateCondominiosTable extends Migration
     {
         Schema::create('condominios', function (Blueprint $table) {
             $table->id();
+            $table->enum('status', ['ativo', 'inativo'])->default('ativo');
             $table->string('nome');
             $table->string('cnpj', 18)->nullable();
             $table->string('endereco')->nullable();

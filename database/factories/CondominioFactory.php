@@ -13,13 +13,13 @@ class CondominioFactory extends Factory
     {
         return [
             'nome'          => 'Condomínio '.$this->faker->streetName(),
+            'status' => $this->faker->randomElement(['ativo', 'inativo']),
             'cnpj'          => $this->faker->unique()->numerify('##.###.###/####-##'),
             'endereco'      => $this->faker->streetAddress(),
             'cidade'        => $this->faker->city(),
             'uf'            => $this->faker->stateAbbr(),
             'telefone'      => $this->faker->phoneNumber(),
             'email'         => $this->faker->companyEmail(),
-            // o responsável (síndico) será atribuído no seeder
         ];
     }
 }
