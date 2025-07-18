@@ -34,7 +34,7 @@ class CondominioController extends Controller
     public function update(CondominioRequest $request, Condominio $condominio): JsonResponse
     {
         $condominio->update($request->validated());
-        return response()->json($condominio);
+        return response()->json($condominio->fresh());
     }
 
     // DELETE /condominios/{id}

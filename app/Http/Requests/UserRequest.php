@@ -10,7 +10,7 @@ class UserRequest extends FormRequest
             'nome'           => 'required|string|max:255',
             'cpf'           => 'nullable|string|max:14|unique:users,cpf,' . $this->id,
             'observacao'         => 'nullable|string|max:255',
-            'idade'       => 'nullable|string|max:3',
+            'idade'       => 'nullable|integer|max:150',
             'email'          => 'nullable|email'
         ];
     }

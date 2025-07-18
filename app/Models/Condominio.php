@@ -9,7 +9,7 @@ class Condominio extends Model
 {
 
     use HasFactory;
-    protected $fillable = ['nome', 'cnpj', 'endereco', 'cidade', 'uf', 'telefone', 'email', 'responsavel_id'];
+    protected $fillable = ['status', 'nome', 'cnpj', 'endereco', 'cidade', 'uf', 'telefone', 'email', 'responsavel_id'];
 
     public function blocos()
     {
