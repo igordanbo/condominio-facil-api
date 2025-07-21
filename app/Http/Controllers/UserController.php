@@ -12,7 +12,8 @@ class UserController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(User::all());
+          $data = User::paginate(10);
+        return response()->json($data);
     }
 
     public function show(User $usuario): JsonResponse

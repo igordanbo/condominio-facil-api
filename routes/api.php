@@ -22,10 +22,9 @@ use App\Http\Controllers\ManutencaoController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
+
+Route::get('/condominios', [App\Http\Controllers\CondominioController::class, 'index']);
 
 Route::apiResource('usuarios',         UserController::class);
 Route::apiResource('condominios',      CondominioController::class);

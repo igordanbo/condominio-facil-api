@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\TipoManutencao;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
+
 
 class TipoManutencaoController extends Controller
 {
@@ -18,11 +21,24 @@ class TipoManutencaoController extends Controller
         return response()->json($tipos_manutencao->load('manutencoes'));
     }
 
-    public function store(Request $request): JsonResponse
-    {
-        $tipo = TipoManutencao::create($request->validated());
+  public function store(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+        ]);
+
+        $tipo = TipoManutencao::create($validated);
+
         return response()->json($tipo, 201);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json([
+            'message' => 'Erro ao criar tipo de manutenção',
+            'erro' => $e->getMessage()
+        ], 500);
     }
+}
 
     public function update(Request $request, TipoManutencao $tipos_manutencao): JsonResponse
     {
