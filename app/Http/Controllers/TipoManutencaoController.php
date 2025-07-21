@@ -13,7 +13,11 @@ class TipoManutencaoController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(TipoManutencao::with('manutencoes')->get());
+
+        $data = TipoManutencao::paginate(10);
+        
+        return response()->json($data);
+    
     }
 
     public function show(TipoManutencao $tipos_manutencao): JsonResponse

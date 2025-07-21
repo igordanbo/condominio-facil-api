@@ -8,10 +8,57 @@ use Illuminate\Http\Request;
 
 class ManutencaoController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $sortBy = $request->input('sort_by');        // exemplo: tipo.nome
+        $sortOrder = $request->input('sort_order', 'asc');
+    
+        // Começa a query
+        $query = ManutencaoProgramada::query()
+            ->with(['tipo', 'condominio', 'bloco', 'apartamento'])
+            ->select('manutencao_programadas.*'); // importante!
+    
+        // Aplica joins conforme o campo de ordenação
+        switch ($sortBy) {
+            case 'tipo.nome':
+                $query->join('tipo_manutencaos', 'tipo_manutencaos.id', '=', 'manutencao_programadas.tipo_manutencao_id')
+                      ->orderBy('tipo_manutencaos.nome', $sortOrder);
+                break;
+            case 'condominio.nome':
+                $query->join('condominios', 'condominios.id', '=', 'manutencao_programadas.condominio_id')
+                      ->orderBy('condominios.nome', $sortOrder);
+                break;
+            case 'bloco.nome':
+                $query->join('blocos', 'blocos.id', '=', 'manutencao_programadas.bloco_id')
+                      ->orderBy('blocos.nome', $sortOrder);
+                break;
+            case 'apartamento.numero':
+                $query->join('apartamentos', 'apartamentos.id', '=', 'manutencao_programadas.apartamento_id')
+                      ->orderBy('apartamentos.numero', $sortOrder);
+                break;
+            case 'data_agendada':
+                $query->orderBy('manutencao_programadas.data_agendada', $sortOrder);
+                break;
+            default:
+                $query->orderBy('manutencao_programadas.created_at', 'desc');
+        }
+
+        if ( $request->filled('nome') ) {
+            $query->join('condominios', 'condominios.id', '=', 'manutencao_programadas.condominio_id')
+            ->where('condominios.nome', 'LIKE', '%' . $request->input('condominios.nome') . '%')
+            ->select('manutencao_programadas.*');
+        }
+
+        if ($request->filled('data_agendada')) {
+            $query->whereDate('manutencao_programadas.data_agendada', $request->input('data_agendada'));
+        }
+
+        if ( $request->filled('status')){
+            $query->where('status', $request->input('status'));
+        }
+
         return response()->json(
-            ManutencaoProgramada::with('tipo', 'condominio', 'bloco', 'apartamento')->get()
+            $query->paginate(10)
         );
     }
 
